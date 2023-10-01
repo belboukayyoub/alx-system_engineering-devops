@@ -10,7 +10,7 @@
 
 int infinite_while(void)
 {
- 	while (1)
+	while (1)
 	{
 		sleep(1);
 	}
