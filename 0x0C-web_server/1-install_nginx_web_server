@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# Update the package lists for repositories. 
+# Install nginx
+# Open port 80 for Nginx to listening on 
+# create the home page 
+# start the nginx server
+
+apt-get -y update
+apt-get -y install nginx
+ufw allow 'Nginx HTTP'
+echo 'Hello World!' > /var/www/html/index.html
+service nginx start
