@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Install load balancer
+
+apt-get install -y software-properties-common
+add-apt-repository -y ppa:vbernat/haproxy-2.8
+apt-get -y update
+apt-get install -y haproxy=2.8.\*
+
+echo "ENABLED=1" > /etc/default/haproxy
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+echo "
+frontend belbouk_tech_frontend
+        bind *:80
+        timeout client 60s
+        default_backend belbouk_tech_backend
+
+backend belbouk_tech_backend
+        balance roundrobin
+        server 394542-web-01 34.203.77.237:80 check
+        server 394542-web-02 100.26.10.70:80 check
+" >> /etc/haproxy/haproxy.cfg
+
+service haproxy start
