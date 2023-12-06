@@ -1,56 +1,29 @@
 # Installs a Nginx server with custome HTTP header
 
-exec {'update':
-  command  => 'sudo apt-get -y update',
+exec { 'update system':
+        command => '/usr/bin/apt-get update',
 }
 
-# Install Nginx package
 package { 'nginx':
 	ensure => 'installed',
-	require => Exec['update']
+	require => Exec['update system']
 }
 
-# Create directories and files
-file { '/etc/nginx/html':
-  ensure => directory,
+file {'/var/www/html/index.html':
+	content => 'Hello World!'
 }
 
-file { '/etc/nginx/html/index.html':
-  ensure  => file,
-  content => 'Hello World!',
+exec {'redirect_me':
+	command => 'sed -i "24i\	rewrite ^/redirect_me https://belbouk.tech/ permanent;" /etc/nginx/sites-available/default',
+	provider => 'shell'
 }
 
-file { '/etc/nginx/html/404.html':
-  ensure  => file,
-  content => "Ceci n'est pas une page",
+exec {'HTTP header':
+	command => 'sed -i "25i\	add_header X-Served-By \$hostname;" /etc/nginx/sites-available/default',
+	provider => 'shell'
 }
 
-# Configure Nginx
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => "\
-server {
-    add_header X-Served-By $(hostname);
-    listen 80;
-    listen [::]:80 default_server;
-    root   /etc/nginx/html;
-    index  index.html index.htm;
-
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
-    }
-
-    error_page 404 /404.html;
-    location = /404.html {
-        root /etc/nginx/html;
-        internal;
-    }
-}",
-  require => Package['nginx'],
-}
-
-# Restart Nginx service
-exec { 'restart nginx':
-  provider => shell,
-  command  => 'sudo service nginx restart',
+service {'nginx':
+	ensure => running,
+	require => Package['nginx']
 }
