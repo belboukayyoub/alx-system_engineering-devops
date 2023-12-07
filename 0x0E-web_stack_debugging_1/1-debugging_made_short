@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # Nginx must be running, and listening on port 80
-apt-get update > /dev/null 2>&1 &
 apt-get install -y nginx > /dev/null 2>&1 &
-service nginx start
+service nginx start > /dev/null 2>&1 &
 echo "" > /run/nginx.pid
