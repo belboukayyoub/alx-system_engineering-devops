@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Bash script that accept 2 arguments domain, [subdomain] then display information about subdomain(s).
+function show_domains_infos {
+	subdomains=("www" "lb-01" "web-01" "web-02")
+
+	for item in "${subdomains[@]}";
+	do
+		dig "${item}"."$1" | grep -A1 'ANSWER SECTION:' | \
+		awk '/IN/ {print "The subdomain " var " is a " $4 " record and points to " $5}' var="$item"
+	done
+}
+
+function show_subdomain_infos {
+	dig "${2}"."$1" | grep -A1 'ANSWER SECTION:' | \
+	awk '/IN/ {print "The subdomain " var " is a " $4 " record and points to " $5}' var="$2"
+}
+
+if [ $# -eq 1 ]
+then
+	show_domains_infos "$1";
+else
+	show_subdomain_infos "$1" "$2";
+fi
