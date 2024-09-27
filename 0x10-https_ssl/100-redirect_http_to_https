@@ -42,5 +42,5 @@ frontend belbouk_tech_frontend
 
 backend belbouk_tech_backend
         balance roundrobin
-        server 394542-web-01 34.203.77.237:80 check
-        server 394542-web-02 100.26.10.70:80 check
+        server 394542-web-01 54.210.88.234:80 check
+        server 394542-web-02 34.202.158.245:80 check
