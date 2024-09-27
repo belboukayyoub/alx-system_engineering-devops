@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 # Nginx must be running, and listening on port 80
-sudo nginx -c /etc/nginx/sites-available/default
-echo "" > /run/nginx.pid
+sudo sed -i 's/8080/80/g' /etc/nginx/sites-enabled/default /etc/nginx/sites-available/default
+sudo service nginx restart
+sudo pkill -o nginx
